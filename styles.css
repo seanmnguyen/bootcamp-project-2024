@@ -215,19 +215,24 @@ main {
   width: 90%;
 }
 
-.blog-entry {
+.blogPreview {
   display: flex;
   flex: auto;
   flex-direction: row;
   justify-content: space-evenly;
   background-color: white;
   margin-bottom: 10px;
+  padding: 2%;
   column-gap: 5px;
+  width: 100%;
 }
 
-.blog-pic {
-  height: 50%;
-  width: 50%;
+.blogImage {
+  height: 30%;
+  width: 30%;
+
+  /* max-height: 400px;
+  max-width: 600px; */
 }
 
 /* CSS for resume page */
@@ -268,6 +273,7 @@ main {
   border-style: solid;
   padding-left: 1%;
   padding-right: 1%;
+  margin-bottom: 1%;
   flex: 1;
 }
 
