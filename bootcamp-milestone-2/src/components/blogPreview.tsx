@@ -2,13 +2,21 @@ import React from "react";
 import styles from "./blogPreview.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { Blog } from "@/app/static/blogData";
 
-export default function BlogPreview(props: Blog) {
+type IProps = {
+  title: string;
+  date: Date;
+  description: string;
+  slug: string;
+  image: string;
+  imageAlt: string;
+};
+
+export default function BlogPreview(props: IProps) {
   return (
     <div className={styles.blogPreview}>
       <h3 className={styles.blogPreviewTitle}>
-        <Link href="/blog/[slug]" as={`/blog/${props.slug}`}>
+        <Link href="/blog/[blogs]" as={`/blog/${props.slug}`}>
           {props.title}
         </Link>{" "}
       </h3>
@@ -22,7 +30,7 @@ export default function BlogPreview(props: Blog) {
         ></Image>
         <p className={styles.blogPreviewDescription}>{props.description}</p>
         <p className={styles.blogPreviewDate}>
-          <strong>Posted on:</strong> {props.date}
+          <strong>Posted on:</strong> {props.date.toDateString()}
         </p>
       </div>
     </div>

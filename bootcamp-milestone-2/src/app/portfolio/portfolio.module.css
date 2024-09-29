@@ -18,55 +18,10 @@
 
 .projectList {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   width: 70%;
   margin: auto;
-  column-gap: 10px;
-}
-
-.projectImage {
-  object-fit: cover;
-  width: 100%;
-  height: auto;
-
-  /* Debug border */
-  /* border: 2px solid black; */
-}
-
-.projectDetails {
-  display: flex;
-  background-color: var(--cg-white);
-  width: 30%;
-  height: 500px;
-  flex-shrink: 1;
-  padding: 0 20px;
-  margin: auto;
-  margin: 0px;
-  line-height: 1.5;
-  overflow: scroll;
-
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-
-  /* Debug border */
-  /* border: 2px solid green; */
-}
-
-.projectDetails a {
-  color: var(--cg-black);
-  text-decoration: none;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.projectDetails a:hover {
-  color: var(--cg-blue);
-  text-decoration: underline;
-}
-
-.projectName {
-  font-weight: bold;
-  font-size: 20px;
+  row-gap: 1rem;
 }

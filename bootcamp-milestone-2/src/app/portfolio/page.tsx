@@ -1,31 +1,45 @@
 import styles from "./portfolio.module.css";
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
+import React, { Suspense } from "react";
+import connectDB from "@/helpers/db";
+import Project from "@/database/projectSchema";
+import ProjectPreview from "@/components/projectPreview";
+import Loading from "@/components/loading";
 
-export default function Portfolio() {
-  return (
-    <div className={styles.project}>
-      <h1 className={styles.pageTitle}>Portfolio</h1>
-      <div className={styles.projectList}>
-        <Link href="/">
-          <Image
-            className={styles.projectImage}
-            src="/personal website.PNG"
-            alt="screenshot of my personal website"
-            width="150"
-            height="200"
-          />
-        </Link>
-        <div className={styles.projectDetails}>
-          <p className={styles.projectName}>Personal Website</p>
-          <p className={styles.projectDescription}>
-            This is my personal website where you'll find a brief introduction
-            about myself, my portfolio, resume, and contact information!
-          </p>
-          <Link href="/">LEARN MORE</Link>
+async function getProjects() {
+  await connectDB;
+
+  try {
+    const projects = Project.find().sort({ date: -1 }).orFail();
+    return projects;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export default async function Portfolio() {
+  const projects = await getProjects();
+  if (projects) {
+    return (
+      <div className={styles.project}>
+        <h1 className={styles.pageTitle}>Portfolio</h1>
+        <div className={styles.projectList}>
+          <Suspense fallback={<Loading />}>
+            {projects.map((project, index) => (
+              <ProjectPreview
+                key={index}
+                title={project.title}
+                slug={project.slug}
+                date={project.date}
+                description={project.description}
+                image={project.image}
+                imageAlt={project.imageAlt}
+                link={project.link}
+              />
+            ))}
+          </Suspense>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+  }
 }
