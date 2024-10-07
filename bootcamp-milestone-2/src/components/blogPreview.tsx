@@ -7,7 +7,7 @@ type IProps = {
   title: string;
   date: Date;
   description: string;
-  slug: string;
+  blogID: string;
   image: string;
   imageAlt: string;
 };
@@ -16,9 +16,7 @@ export default function BlogPreview(props: IProps) {
   return (
     <div className={styles.blogPreview}>
       <h3 className={styles.blogPreviewTitle}>
-        <Link href="/blog/[blogs]" as={`/blog/${props.slug}`}>
-          {props.title}
-        </Link>{" "}
+        <Link href={`/blogs/${props.blogID}`}>{props.title}</Link>{" "}
       </h3>
       <div className={styles.blogPreviewInfo}>
         <Image

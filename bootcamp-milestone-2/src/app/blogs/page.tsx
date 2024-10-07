@@ -32,7 +32,7 @@ export default async function Blogs() {
                 title={blog.title}
                 description={blog.description}
                 date={blog.date}
-                slug={blog.slug}
+                blogID={blog.blogID}
                 image={blog.image}
                 imageAlt={blog.imageAlt}
               />
