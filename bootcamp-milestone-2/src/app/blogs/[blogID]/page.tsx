@@ -1,42 +1,80 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import style from "./blog.module.css";
 import Image from "next/image";
-import { IComment } from "@/database/blogSchema";
+import { IBlog, IComment } from "@/database/blogSchema";
 import Comment from "@/components/comment";
+import fetchBlog from "@/utils/fetchBlog";
+import postComment from "@/utils/postComment";
 
 type Props = {
   params: { blogID: string };
 };
 
-async function getBlog(blogID: string) {
-  try {
-    // This fetches the blog from an api endpoint that would GET the blog
-    const res = await fetch(`http://localhost:3000/api/blogs/${blogID}`, {
-      cache: "no-store",
-    });
-    // This checks that the GET request was successful
-    if (!res.ok) {
-      throw new Error("Failed to fetch blog");
+export default function Blog({ params: { blogID } }: Props) {
+  const [commentData, setCommentData] = useState({
+    user: "",
+    comment: "",
+  });
+  const [blog, setBlog] = useState<IBlog>({
+    title: "",
+    blogID: "",
+    date: new Date(),
+    description: "",
+    content: [],
+    image: "",
+    imageAlt: "",
+    comments: [],
+  });
+  const [blogDate, setBlogDate] = useState<Date>(new Date());
+  const [loading, setLoading] = useState<Boolean>(true);
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const data = await fetchBlog(blogID);
+        console.log(data);
+        setBlog(data);
+      } catch (err: unknown) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogData();
+    setBlogDate(new Date(blog.date));
+  }, [blogID]);
+
+  function handleCommentUpload(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    postComment(blogID, commentData);
+
+    try {
+      window.location.reload();
+      alert("comment posted!");
+    } catch (err: unknown) {
+      console.error(`Error: ${err}`);
+      alert("could not post comment :/");
     }
-
-    const res_j = await res.json();
-    return res_j;
-  } catch (err: unknown) {
-    console.log(`error: ${err}`);
-    return null;
   }
-}
 
-export default async function Blog({ params: { blogID } }: Props) {
-  const blog = await getBlog(blogID);
-  const blogDate = new Date(blog?.date);
+  function handleCommentChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target;
+    setCommentData((prevCommentData) => ({
+      ...prevCommentData,
+      [name]: value,
+    }));
+  }
 
   if (blog) {
     return (
       <div>
         <h1 className={style.pageTitle}>{blog?.title}</h1>
         <h2 className={style.pageDate}>
-          <em>{blogDate.toDateString()}</em>
+          <em>{blogDate?.toDateString()}</em>
         </h2>
 
         <div className={style.pageContents}>
@@ -55,6 +93,32 @@ export default async function Blog({ params: { blogID } }: Props) {
                 <Comment key={index} comment={comment} />
               ))}
             </div>
+            <form
+              className={style.pageAddComment}
+              onSubmit={handleCommentUpload}
+            >
+              <h3 className="pageAddCommentTitle">Write A Comment!</h3>
+              <label htmlFor="user">Your Name</label>
+              <input
+                type="text"
+                id="user"
+                name="user"
+                value={commentData.user}
+                onChange={handleCommentChange}
+                placeholder="Name"
+                required
+              />
+              <label htmlFor="comment">Your Thoughts...</label>
+              <textarea
+                id="comment"
+                name="comment"
+                value={commentData.comment}
+                onChange={handleCommentChange}
+                placeholder="Tell me what you think!"
+                required
+              ></textarea>
+              <button type="submit">Submit</button>
+            </form>
           </div>
         </div>
         <br />
@@ -112,6 +176,6 @@ export default async function Blog({ params: { blogID } }: Props) {
       </div>
     );
   } else {
-    return <div> not found :( </div>;
+    return <div> not found </div>;
   }
 }
