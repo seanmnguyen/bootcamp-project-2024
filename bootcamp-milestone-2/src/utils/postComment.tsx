@@ -7,13 +7,16 @@ export default async function postComment(
       commentBody: commentData,
       blogSlug: commentID,
     };
-    const res = await fetch(`http://localhost:3000/api/comments/${commentID}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+    const res = await fetch(
+      `https://seanmnguyen2024/api/comments/${commentID}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Failed to add comment");
