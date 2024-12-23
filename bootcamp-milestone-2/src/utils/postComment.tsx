@@ -8,7 +8,7 @@ export default async function postComment(
       blogSlug: commentID,
     };
     const res = await fetch(
-      `https://seanmnguyen2024/api/comments/${commentID}`,
+      `https://seanmnguyen2024.vercel.app/api/comments/${commentID}`,
       {
         method: "POST",
         headers: {
